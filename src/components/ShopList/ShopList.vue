@@ -5,8 +5,8 @@
       <span class="shop_header_title">附近商家</span>
     </div>
     <div class="shop_container">
-      <ul class="shop_list">
-        <li class="shop_li border-1px" v-for="(shop, index) in shops" :key="shop.id">
+      <ul class="shop_list" v-if="shops.length">
+        <li class="shop_li border-1px" v-for="(shop, index) in shops" :key="shop.id"  @click="push">
           <a>
             <div class="shop_left">
               <img class="shop_img" :src="'https://fuss10.elemecdn.com'+shop.image_path">
@@ -43,15 +43,26 @@
           </a>
         </li>
       </ul>
+      <ul>
+        <li><img src="./images/shop_back.svg" alt="loading"></li>
+        <li><img src="./images/shop_back.svg" alt="loading"></li>
+        <li><img src="./images/shop_back.svg" alt="loading"></li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
+  import router from '../../router'
   export default {
     computed: {
       ...mapState(["shops"])
+    },
+    methods: {
+      push(){
+        router.push("/shop")
+      }
     },
   }
 </script>

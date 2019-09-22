@@ -12,11 +12,13 @@
           <form>
             <div :class="logtype?'on':''">
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
-                <button :disabled="!isRightPhone" class="get_verification" @click.prevent="getcode" :class="{right_phone_number:isRightPhone}">获取验证码</button>
+                <input type="tel" maxlength="11" placeholder="手机号" name="phone" v-model="phone" v-validate="{required: true,regex: /^1\d{10}$/}">
+                <span style="color: red;" v-show="errors.has('phone')">{{ errors.first('phone') }}</span>
+                <button :disabled="!isRightPhone||countdown>0" class="get_verification" @click.prevent="getcode" :class="{right_phone_number:isRightPhone}">{{countdown>0?`已发送验证码(${countdown}s)`:"发送验证码"}}</button>
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="验证码">
+                <input type="tel" maxlength="8" placeholder="验证码" name="code" v-model="code" v-validate="{required: true}">
+                <span style="color: red;" v-show="errors.has('code')">{{ errors.first('code') }}</span>
               </section>
               <section class="login_hint">
                 温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -26,22 +28,25 @@
             <div :class="!logtype?'on':''">
               <section>
                 <section class="login_message">
-                  <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                  <input type="text" maxlength="11" placeholder="手机/邮箱/用户名" name="name" v-model="name" v-validate="{required: true}">
+                  <span style="color: red;" v-show="errors.has('name')">{{ errors.first('name') }}</span>
                 </section>
                 <section class="login_verification">
-                  <input type="tel" maxlength="8" placeholder="密码">
-                  <div class="switch_button off">
-                    <div class="switch_circle"></div>
-                    <span class="switch_text">...</span>
+                  <input :type="isShowPwd?'text':'password'" maxlength="8" placeholder="密码" name="pwd" v-model="pwd" v-validate="'required'">
+                  <span style="color: red;" v-show="errors.has('pwd')">{{ errors.first('pwd') }}</span>
+                  <div class="switch_button" @click="isShowPwd = !isShowPwd" :class="isShowPwd?'on':'off'">
+                    <div class="switch_circle" :class="isShowPwd?'right':''"></div>
+                    <span class="switch_text">{{isShowPwd?'abc':''}}</span>
                   </div>
                 </section>
                 <section class="login_message">
-                  <input type="text" maxlength="11" placeholder="验证码">
-                  <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                  <input type="text" maxlength="11" placeholder="验证码" name="captcha" v-model="captcha" v-validate="'required'">
+                  <span style="color: red;" v-show="errors.has('captcha')">{{ errors.first('captcha') }}</span>
+                  <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="setcaptcha" ref="captcha2">
                 </section>
               </section>
             </div>
-            <button class="login_submit">登录</button>
+            <button class="login_submit" @click.prevent="login">登录</button>
           </form>
           <a href="javascript:;" class="about_us">关于我们</a>
         </div>
@@ -53,12 +58,19 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {reqSendCode, reqSmsLogin, reqPwdLogin} from '../../api'
+  import { Toast, MessageBox } from 'mint-ui'
   export default {
     data() {
       return {
         logtype:true, //登录类型:true 短信登录 / false 密码登录
-        phone:'', //手机号是否通过检验 
-        //剩余时间
+        phone:'', //手机号
+        code:'', //验证码
+        name:'', //密码登录
+        pwd:'', //密码
+        captcha:'', //图片验证码
+        countdown:0, //剩余时间
+        isShowPwd:false //密码是否可见
       }
     },
     computed: {
@@ -68,8 +80,64 @@
       }
     },
     methods: {
-      getcode(){
-        alert("获取验证码")
+      async getcode(){
+        if (this.countdown>0) {
+          return
+        }
+        this.countdown = 10
+        const timeId = setInterval(() => {
+          this.countdown--
+          if (this.countdown<=0) {
+            clearInterval(timeId)
+          }
+        }, 1000)
+        const result = await reqSendCode(this.phone)
+        if (result.code === 0) {
+          //发送成功
+          Toast('已发送验证码')
+        }else{
+          this.countdown = 0
+          MessageBox("提示",result.msg)
+        }
+      },
+      async login(){
+        let names
+        if (this.logtype) {
+          names = ['phone', 'code']
+        }else{
+          names = ['name', 'pwd', 'captcha']
+        }
+        const success = await this.$validator.validateAll(names) // 对所有表单项进行验证
+        if (success) {
+          const {phone,code,name,pwd,captcha} = this
+          let result
+          if (this.logtype) { //短信登录
+            result = await reqSmsLogin({phone,code})
+            // 停止倒计时
+            this.countdown = 0       
+          }else{ //密码登录
+            result = await reqPwdLogin({name,pwd,captcha})
+            if (result.code === 1) {
+              // 再次请求svg图片
+              this.setcaptcha()
+            }
+          }
+          if (result.code===0) { //登录成功
+            // 保存user
+            const user = result.data
+            //保存loken
+            localStorage.setItem("token_id",user.token)
+            this.$store.dispatch("saveUser",user)
+            // 跳转到个人
+            this.$router.replace("/profile")
+          }else{
+            //登录失败
+            MessageBox("提示",result.msg)
+          }
+        }
+      },
+      setcaptcha(){
+        this.$refs.captcha2.src = `http://localhost:4000/captcha?time=${Date.now()}`
       }
     },
   }
@@ -176,6 +244,8 @@
                     background #fff
                     box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                     transition transform .3s
+                    &.right
+                      transform translateX(27px)
               .login_hint
                 margin-top 12px
                 color #999
