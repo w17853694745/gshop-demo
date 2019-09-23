@@ -1,0 +1,12 @@
+{
+  "login": "login",
+  "title": "Gui-Gu",
+  "sms": "Text",
+  "pwd": "Password",
+  "phone": "Mobile phone no.",
+  "code": "Verification code",
+  "msg": "Click if you agree, and leave it at that",
+  "agreement": "《Customer service agreement》",
+  "AboutUs": "About us",
+  "send": "Send verification"
+}

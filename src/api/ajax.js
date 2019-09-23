@@ -23,13 +23,22 @@ instance.interceptors.request.use((config)=>{
   // 处理携带token
   const token = store.state.token
   // console.log(store)
-  if (config.headers.isneedToken) {
-    if (token) {
-      config.headers['Authorization'] = token
-    }else{
-      throw new Error("请先登录,才能继续浏览")
+  // 只有在首页的时候如果没有token  才会跳转到login
+  if (token) {
+    config.headers['Authorization'] = token    
+  }else{
+    if (config.headers.checkToken) {
+      throw new Error("请先登录,才能继续浏览")      
     }
   }
+
+  // if (config.headers.isneedToken) {
+  //   if (token) {
+  //     config.headers['Authorization'] = token
+  //   }else{
+  //     throw new Error("请先登录,才能继续浏览")
+  //   }
+  // }
   return config
 })
 //响应拦截器
@@ -44,7 +53,6 @@ instance.interceptors.response.use(
         Toast("需要登录才能访问")
         router.replace("/login")
       }
-      
     } else{
       if (error.response.status==401) {
         if (router.currentRoute.path !== "/login") {
@@ -56,9 +64,9 @@ instance.interceptors.response.use(
         Toast("服务器资源加载错误")
       }
       alert("error:" + error.message)
-      return new Promise(() => {})
     }
-    
+    // 因为if 和 else都需要返回一个pending状态的promise
+    return new Promise(() => {})
   }
 )
 export default instance

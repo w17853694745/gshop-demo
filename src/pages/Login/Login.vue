@@ -2,27 +2,27 @@
   <section class="loginContainer">
       <div class="loginInner">
         <div class="login_header">
-          <h2 class="login_logo">硅谷外卖</h2>
+          <h2 class="login_logo">{{$t('title')}}</h2>
           <div class="login_header_title">
-            <a href="javascript:;" :class="logtype?'on':''" @click="logtype=true">短信登录</a>
-            <a href="javascript:;" :class="!logtype?'on':''" @click="logtype=false">密码登录</a>
+            <a href="javascript:;" :class="logtype?'on':''" @click="logtype=true">{{$t('sms')}}</a>
+            <a href="javascript:;" :class="!logtype?'on':''" @click="logtype=false">{{$t('pwd')}}</a>
           </div>
         </div>
         <div class="login_content">
           <form>
             <div :class="logtype?'on':''">
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机号" name="phone" v-model="phone" v-validate="{required: true,regex: /^1\d{10}$/}">
+                <input type="tel" maxlength="11" :placeholder="$t('phone')" name="phone" v-model="phone" v-validate="{required: true,regex: /^1\d{10}$/}">
                 <span style="color: red;" v-show="errors.has('phone')">{{ errors.first('phone') }}</span>
-                <button :disabled="!isRightPhone||countdown>0" class="get_verification" @click.prevent="getcode" :class="{right_phone_number:isRightPhone}">{{countdown>0?`已发送验证码(${countdown}s)`:"发送验证码"}}</button>
+                <button :disabled="!isRightPhone||countdown>0" class="get_verification" @click.prevent="getcode" :class="{right_phone_number:isRightPhone}">{{countdown>0?`已发送验证码(${countdown}s)`:$t('send')}}</button>
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="验证码" name="code" v-model="code" v-validate="{required: true}">
+                <input type="tel" maxlength="8" :placeholder="$t('code')" name="code" v-model="code" v-validate="{required: true}">
                 <span style="color: red;" v-show="errors.has('code')">{{ errors.first('code') }}</span>
               </section>
               <section class="login_hint">
-                温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
-                <a href="javascript:;">《用户服务协议》</a>
+                {{$t('msg')}}
+                <a href="javascript:;">{{$t('agreement')}}</a>
               </section>
             </div>
             <div :class="!logtype?'on':''">
@@ -46,9 +46,10 @@
                 </section>
               </section>
             </div>
-            <button class="login_submit" @click.prevent="login">登录</button>
+            <button class="login_submit" @click.prevent="login">{{$t('login')}}</button>
           </form>
-          <a href="javascript:;" class="about_us">关于我们</a>
+          <a href="javascript:;" class="about_us">{{$t('AboutUs')}}</a>
+          <a href="javascript:;" class="about_us" style="color:blue" @click="lang">{{language?'语言':'language'}}:{{language?'中文':'English'}}</a>
         </div>
         <a href="javascript:" class="go_back" @click="$router.go(-1)">
           <i class="iconfont icon-jiantou2"></i>
@@ -70,7 +71,8 @@
         pwd:'', //密码
         captcha:'', //图片验证码
         countdown:0, //剩余时间
-        isShowPwd:false //密码是否可见
+        isShowPwd:false, //密码是否可见
+        language:true, //语言:true 中文 / false 英文
       }
     },
     computed: {
@@ -138,6 +140,10 @@
       },
       setcaptcha(){
         this.$refs.captcha2.src = `http://localhost:4000/captcha?time=${Date.now()}`
+      },
+      lang(){
+        this.language = !this.language
+        this.$i18n.locale = this.language?'zh_CN':'en'
       }
     },
   }

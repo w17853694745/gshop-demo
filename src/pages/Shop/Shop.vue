@@ -23,6 +23,8 @@
       ShopHeader
     },
     mounted() {
+      this.$store.dispatch("savegoods")
+      this.$store.dispatch("saveratings")
       this.$store.dispatch("saveinfo")
     },
   }

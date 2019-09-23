@@ -14,7 +14,7 @@ export const reqAddress = (latitude, longitude) => ajax({
 //获取食品分类列表
 export const reqCategorys = () => ajax.get("index_category",{
   headers:{
-    isneedToken:true
+    checkToken: true
   }
 })
 
@@ -25,7 +25,7 @@ export const reqShops = ({latitude, longitude}) => ajax.get("shops",{
     longitude
   },
   headers: {
-    isneedToken: true
+    checkToken: true
   }
 })
 
@@ -63,9 +63,9 @@ export const reqPwdLogin = ({
 })
 // 自动登录
 export const autoLogin = () => ajax("/auto_login", {
-  headers:{
-    isneedToken:true
-  }
+  // headers:{
+  //   isneedToken:true
+  // }
 })
 // 获取商品列表
 export const reqGoods = ()=>ajax("/goods")

@@ -32,7 +32,11 @@
     methods: {
       //编程式路由跳转
       check(path){
-        this.$router.replace(path)
+        if (this.$route.path!==path) { //不等于的时候跳转
+          this.$router.replace(path)          
+        }else{
+          window.location.reload()
+        }
       }
     },  
   }
