@@ -5,7 +5,7 @@
         <span class="header_title_text">我的</span>
       </a>
     </header>
-    <section class="profile-number" @click="$router.push('/login')">
+    <section class="profile-number" @click="$router.push(user._id?'/details':'/login')">
       <a href="javascript:" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
@@ -103,7 +103,9 @@
   import {MessageBox} from 'mint-ui'
   export default {
     computed: {
-      ...mapState(["user"])
+      ...mapState({
+        user:state=>state.user.user
+      })
     },
     methods: {
       logout(){

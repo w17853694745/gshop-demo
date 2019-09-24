@@ -112,7 +112,9 @@
   import {mapState} from 'vuex'
   export default {
     computed: {
-      ...mapState(['info'])
+      ...mapState({
+        info:state=>state.shop.info
+      })
     },
     data() {
       return {

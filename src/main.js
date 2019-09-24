@@ -8,6 +8,7 @@ import './mock/mockApi'
 import './common/vee-validate/vee-validate'
 import router from './router'
 import Header from './components/Header/Header.vue'
+import CartControl from './components/CartControl/CartControl.vue'
 import store from './vuex/store'
 import Start from './components/Start/Start.vue'
 import i18n from './i18n'
@@ -15,6 +16,7 @@ import i18n from './i18n'
 Vue.config.productionTip = false
 Vue.component("Header",Header)
 Vue.component("Start", Start)
+Vue.component("CartControl", CartControl)
 Vue.component(Button.name,Button)
 
 new Vue({

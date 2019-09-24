@@ -19,3 +19,9 @@ export const RECEIVE_RATINGS = "receive_ratings"
 
 export const RECEIVE_INFO = "receive_info"
 
+export const ADD_COUNT = "add_count"
+
+export const REDUCE_COUNT = "reduce_count"
+
+export const CLEAR_ALL = "clear_all"
+

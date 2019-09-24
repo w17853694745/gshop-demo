@@ -21,7 +21,7 @@ instance.interceptors.request.use((config)=>{
     config.data = qs.stringify(config.data)
   }
   // 处理携带token
-  const token = store.state.token
+  const token = store.state.user.token
   // console.log(store)
   // 只有在首页的时候如果没有token  才会跳转到login
   if (token) {

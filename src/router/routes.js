@@ -7,6 +7,7 @@ import Shop from '../pages/Shop/Shop.vue'
 import ShopGoods from '../pages/Shop/ShopGoods.vue'
 import ShopRatings from '../pages/Shop/ShopRatings.vue'
 import ShopInfo from '../pages/Shop/ShopInfo.vue'
+import Details from '../pages/Details/Details.vue'
 
 export default [{
     path: "/msite",
@@ -61,6 +62,10 @@ export default [{
         redirect:"/shop/goods"
       }
     ]
+  },
+  {
+    path:"/details",
+    component: Details
   },
   {
     path: "/",
