@@ -12,6 +12,12 @@ import CartControl from './components/CartControl/CartControl.vue'
 import store from './vuex/store'
 import Start from './components/Start/Start.vue'
 import i18n from './i18n'
+import VueLazyload from 'vue-lazyload'
+import loading from './common/images/loading.gif'
+
+Vue.use(VueLazyload,{
+  loading
+})
 
 Vue.config.productionTip = false
 Vue.component("Header",Header)

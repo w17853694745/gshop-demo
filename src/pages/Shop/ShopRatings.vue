@@ -35,12 +35,12 @@
       <div class="split"></div>
 
       <div>
-        <RatingsFilter></RatingsFilter>
+        <RatingsFilter ref="Filter" :setRatingsTypes="setRatingsTypes" :isolnycontent="isolnycontent"></RatingsFilter>
       </div>
 
       <div class="rating-wrapper">
         <ul>
-          <li class="rating-item" v-for="(rating, index) in ratings" :key="index">
+          <li class="rating-item" v-for="(rating, index) in ratingList" :key="index">
             <div class="avatar">
               <img width="28" height="28" :src="rating.avatar">
             </div>
@@ -55,7 +55,8 @@
               <br>
               <p class="text">{{rating.text}}</p>
               <div class="recommend">
-                <span class="iconfont icon-thumb_up"></span>
+                <!-- icon-thumb_up -->
+                <span class="iconfont" :class="rating.score>3?'icon-thumb_up':'icon-thumb_down'"></span>
               </div>
               <div class="time">{{rateTime}}</div>
             </div>
@@ -70,21 +71,46 @@
   import BScroll from '@better-scroll/core'
   import RatingsFilter from '../../components/RatingsFilter/RatingsFilter'
   import Star from '../../components/Start/Start'
-  import {mapState} from 'vuex'
+  import {mapState,mapGetters} from 'vuex'
   import moment from 'moment'
   export default {
     components:{
       RatingsFilter,
       Star
     },
+    data() {
+      return {
+        ratingarr : [],
+        type:true
+      }
+    },
     computed: {
       ...mapState({
         info:state=>state.shop.info,
         ratings:state=>state.shop.ratings
       }),
+      ...mapGetters(["ratingsType"]),
       rateTime(){
         const time = moment(this.ratings.rateTime).format('YYYY-MM-DD HH:mm:ss')
         return time
+      },
+      ratingList(){
+             
+        if (this.type) {
+          if (this.ratingarr.length>0) {
+            return this.ratingarr.filter(rating=>rating.text!=="")
+          }else{
+            return this.ratings.filter(rating=>rating.text!=="")
+          }
+        }else{
+          if (this.ratingarr.length>0) {
+            return this.ratingarr
+          }else{
+            return this.ratings
+          }
+          
+        }
+        
       }
     },
     watch: {
@@ -92,6 +118,9 @@
         this.$nextTick(()=>{
           this.initscroll()
         })
+      },
+      ratingsType(){
+        this.ratings = this.ratingsType
       }
     },
     mounted() {
@@ -101,9 +130,16 @@
     },
     methods: {
       initscroll(){
-        new BScroll('.ratings',{
+        this.bs = new BScroll('.ratings',{
 
         })
+        this.bs.refresh()
+      },
+      setRatingsTypes(ratings){
+        this.ratingarr = ratings
+      },
+      isolnycontent(type){
+        this.type = type
       }
     },
   }

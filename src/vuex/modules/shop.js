@@ -115,6 +115,36 @@ const getters = {
       return pre
     }, 0)
   },
+  //根据不同类型,返回不同的评论
+  ratingsType: (state)=> (type) =>{
+    if (type===0) {
+      return state.ratings
+    }else if (type===1) {
+      let arr =[]
+      state.ratings.forEach(rating=>{
+        if (rating.score > 3) {
+          arr.push(rating)
+        }
+      })
+      return arr
+    }else if (type===2){
+      let arr = []
+      state.ratings.forEach(rating => {
+        if (rating.score <= 3) {
+          arr.push(rating)
+        }
+      })
+      return arr
+    }
+  }
+  // //全部评论
+  // allcontent(state) {
+  //   return state.ratings
+  // },
+  // //好评
+  // goodcontent(state){
+
+  // }
 }
 
 export default {

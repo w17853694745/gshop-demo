@@ -1,17 +1,20 @@
 <template>
   <div class="ratings-filter">
     <div class="rating-type border-1px">
-      <span class="block">
-        全部<span class="count">{{ratings.length}}</span>
+      <span class="block " @click="checktype(0)" :class="{active:check===0}">
+        全部
+        <span class="count">{{ratings.length}}</span>
       </span>
-      <span class="block active">
-        推荐<span class="count">{{Praise}}</span>
+      <span class="block" @click="checktype(1)" :class="{active:check===1}">
+        推荐
+        <span class="count" >{{Praise}}</span>
       </span>
-      <span class="block">
-        吐槽<span class="count">{{Negative}}</span>
+      <span class="block" @click="checktype(2)" :class="{active:check===2}">
+        吐槽
+        <span class="count">{{Negative}}</span>
       </span>
     </div>
-    <div class="switch on">
+    <div :class="iscontnet?'switch on':'switch'" @click="checkcontnet">
       <span class="iconfont icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
@@ -19,12 +22,36 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapState} from 'vuex'
+  import {mapState,mapGetters} from 'vuex'
   export default {
+    props:{
+      setRatingsTypes:Function,
+      isolnycontent:Function
+    },
+    data() {
+        return {
+          check:0, //当前选中的是哪种评论: 0全部, 1好评, 2吐槽
+          iscontnet:true
+        }
+    },
+    methods: {
+      // 修改内容类型
+      checktype(type){
+        this.check = type
+        //发送请求
+        const ratings = this.ratingsType(type)
+        this.setRatingsTypes(ratings)
+      },
+      checkcontnet(){
+        this.iscontnet = !this.iscontnet
+        this.isolnycontent(this.iscontnet)
+      }
+    },
     computed: {
       ...mapState({
         ratings:state=>state.shop.ratings
       }),
+      ...mapGetters(["ratingsType"]),
       Praise(){
         let num = 0
         this.ratings.reduce((pre,rating)=>{
