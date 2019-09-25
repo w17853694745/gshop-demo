@@ -58,7 +58,7 @@
                 <!-- icon-thumb_up -->
                 <span class="iconfont" :class="rating.score>3?'icon-thumb_up':'icon-thumb_down'"></span>
               </div>
-              <div class="time">{{rateTime}}</div>
+              <div class="time">{{time(rating.rateTime)}}</div>
             </div>
           </li>
         </ul>
@@ -90,10 +90,6 @@
         ratings:state=>state.shop.ratings
       }),
       ...mapGetters(["ratingsType"]),
-      rateTime(){
-        const time = moment(this.ratings.rateTime).format('YYYY-MM-DD HH:mm:ss')
-        return time
-      },
       ratingList(){
              
         if (this.type) {
@@ -140,6 +136,9 @@
       },
       isolnycontent(type){
         this.type = type
+      },
+      time(time){
+        return moment(time).format('YYYY-MM-DD HH:mm:ss')
       }
     },
   }

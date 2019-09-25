@@ -146,6 +146,15 @@
         this.$i18n.locale = this.language?'zh_CN':'en'
       }
     },
+    beforeRouteEnter (to, from, next) {
+      next((component)=>{
+        if (component.$store.state.user.token) {
+          next("/profile")
+        }else{
+          next()
+        }
+      })
+    },
   }
 </script>
 

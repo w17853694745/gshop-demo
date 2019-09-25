@@ -8,6 +8,10 @@ import ShopGoods from '../pages/Shop/ShopGoods.vue'
 import ShopRatings from '../pages/Shop/ShopRatings.vue'
 import ShopInfo from '../pages/Shop/ShopInfo.vue'
 import Details from '../pages/Details/Details.vue'
+import A from '../pages/Test/A.vue'
+import B from '../pages/Test/B.vue'
+import B1 from '../pages/Test/B1.vue'
+import B2 from '../pages/Test/B2.vue'
 
 export default [{
     path: "/msite",
@@ -66,6 +70,24 @@ export default [{
   {
     path:"/details",
     component: Details
+  },
+  {
+    path:"/a",
+    component:A
+  },
+  {
+    path: "/b",
+    component: B,
+    children:[
+      {
+        path: "/b/b1",
+        component: B1
+      },
+      {
+        path: "/b/b2",
+        component: B2
+      }
+    ]
   },
   {
     path: "/",

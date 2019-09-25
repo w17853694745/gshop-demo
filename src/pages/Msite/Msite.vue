@@ -2,10 +2,10 @@
   <section class="msite">
     <!--首页头部-->
     <Header :title="address.name">
-      <span class="header_search" slot="left">
+      <span class="header_search" slot="left" @click="$router.push('/search')">
         <i class="iconfont icon-sousuo"></i>
       </span>
-      <span class="header_login" slot="right">
+      <span class="header_login" slot="right"  @click="$router.push('/login')">
         <span class="header_login_text">登录|注册</span>
       </span>
     </Header>
@@ -38,7 +38,8 @@
   import Swiper from 'swiper'
   import 'swiper/css/swiper.min.css'
 
-  import ShopList from '../../components/ShopList/ShopList'
+  // import ShopList from '../../components/ShopList/ShopList'
+  import ShopList from 'components/ShopList/ShopList'
   export default {
     components:{
       ShopList

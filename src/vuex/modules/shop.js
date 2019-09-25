@@ -55,7 +55,7 @@ const mutations = {
       }
     }
   },
-  //清除所有
+  //清除所有count
   [CLEAR_ALL](state){
     state.shopCart.forEach(food=>{
       food.count = 0

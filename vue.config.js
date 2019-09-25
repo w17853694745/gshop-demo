@@ -1,3 +1,9 @@
+const path = require("path")
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
+
 module.exports = {
   devServer: {
     proxy: {
@@ -10,7 +16,16 @@ module.exports = {
       }
     }
   },
-
+  configureWebpack: {
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js',
+        '@': resolve('src'),
+        'components': resolve('src/components'),
+      }
+    },
+  },
   pluginOptions: {
     i18n: {
       locale: 'zh_CN',
@@ -18,5 +33,6 @@ module.exports = {
       localeDir: 'locales',
       enableInSFC: false
     }
-  }
+  },
+  
 }

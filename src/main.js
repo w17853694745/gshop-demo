@@ -26,7 +26,11 @@ Vue.component("CartControl", CartControl)
 Vue.component(Button.name,Button)
 
 new Vue({
-  render: h => h(App),
+  // render: h => h(App),
+  components:{
+    App
+  },
+  template:"<App/>",
   router,
   i18n,
   store
