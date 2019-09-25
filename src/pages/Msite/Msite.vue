@@ -45,7 +45,6 @@
       ShopList
     },
     async mounted() {
-      this.$store.dispatch("getAddress"),
       this.$store.dispatch("getshops")
       await this.$store.dispatch("getCategorys")
       new Swiper('.swiper-container', {

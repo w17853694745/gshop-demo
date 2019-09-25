@@ -93,7 +93,7 @@
             clearInterval(timeId)
           }
         }, 1000)
-        const result = await reqSendCode(this.phone)
+        const result = await this.$Api2.user.sendCode(this.phone)
         if (result.code === 0) {
           //发送成功
           Toast('已发送验证码')
@@ -114,11 +114,11 @@
           const {phone,code,name,pwd,captcha} = this
           let result
           if (this.logtype) { //短信登录
-            result = await reqSmsLogin({phone,code})
+            result = await this.$Api2.user.loginSms({phone,code})
             // 停止倒计时
             this.countdown = 0       
           }else{ //密码登录
-            result = await reqPwdLogin({name,pwd,captcha})
+            result = await this.$Api2.user.loginPwd({name,pwd,captcha})
             if (result.code === 1) {
               // 再次请求svg图片
               this.setcaptcha()

@@ -9,6 +9,7 @@ import {
   reqCategorys,
   reqShops
 } from '../../api'
+import Api2 from '../../api2'
 
 
 const state = {
@@ -37,7 +38,7 @@ const actions = {
   async getAddress({commit,state}){
     //获取地理位置
     const {latitude, longitude} = state
-    const result = await reqAddress(latitude, longitude)
+    const result = await Api2.msite.getAddress({latitude, longitude})
     if (result.code === 0) {
       commit(RECEIVE_ADDRESS, result.data)
     }
@@ -45,7 +46,7 @@ const actions = {
   },
   // 通知更新categorys:分类列表
   async getCategorys({commit}){
-    const result = await reqCategorys()
+    const result = await Api2.msite.getCategorys()
     if (result.code === 0) {
       commit(RECEIVE_CATEGORYS,result.data)
     }
@@ -53,7 +54,10 @@ const actions = {
   // 通知更新shops:商家列表
   async getshops({commit,state}) {
     const {latitude, longitude} = state
-    const result = await reqShops({latitude, longitude})
+    const result = await Api2.msite.getShops({
+      latitude,
+      longitude
+    })
     if (result.code === 0) {
       commit(RECEIVE_SHOPS, result.data)
     }

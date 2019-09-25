@@ -5,9 +5,10 @@ import {
   RECEIVE_TOKEN,
   LOG_OUT,
 } from '../mutation-type'
-import {
-  autoLogin
-} from '../../api'
+// import {
+//   autoLogin
+// } from '../../api'
+import Api2 from '../../api2'
 
 const state = {
   user: {}, // 用户
@@ -36,7 +37,7 @@ const actions = {
   },
   //自动登录
   async auto_Login({commit}){
-    const result = await autoLogin()
+    const result = await Api2.user.autoLogin()
     if (result && result.code === 0) {
       commit(RECEIVE_USER,result.data)
     }

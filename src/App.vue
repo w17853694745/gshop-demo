@@ -15,7 +15,8 @@
       FooterGuide
     },
     mounted() {
-      this.$store.dispatch("auto_Login")
+      this.$store.dispatch("auto_Login"),
+      this.$store.dispatch("getAddress")
     },
   }
 </script>

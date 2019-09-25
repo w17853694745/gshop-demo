@@ -14,6 +14,9 @@ import Start from './components/Start/Start.vue'
 import i18n from './i18n'
 import VueLazyload from 'vue-lazyload'
 import loading from './common/images/loading.gif'
+import Api2 from './api2'
+
+Vue.prototype.$Api2 = Api2
 
 Vue.use(VueLazyload,{
   loading
